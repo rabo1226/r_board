@@ -47,6 +47,12 @@ public class BoardController {
 
   //게시글 상세 조회 API
   //url : /boards/{게시글번호}
+
+  /**
+   *
+   * @param boardNum 게시글 번호
+   * @return
+   */
   @GetMapping("/{boardNum}")
   public ResponseEntity<?> getBoard(@PathVariable("boardNum") Long boardNum){
     try {
@@ -79,7 +85,18 @@ public class BoardController {
   }
 
   //게시글 삭제 API
-  //url : /boards
+  //url : /boards/글번호
+  @DeleteMapping("/{boardNum}")
+  public ResponseEntity<?> deleteBoard(@PathVariable("boardNum") Long boardNum){
+    try {
+      boardService.deleteBoard(boardNum);
+      return ResponseEntity.status(HttpStatus.OK).build();
+    }catch (Exception e){
+      log.error("게시글 삭제 서버 오류!");
+      e.printStackTrace();;
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+  }
 
   //게시글 수정 API
   //url : /boards/{게시글번호}

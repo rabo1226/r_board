@@ -2,6 +2,7 @@ package com.green.r_board.dto;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -10,6 +11,6 @@ public class ReplyDTO {
   private Long replyNum;
   private String replyContent;
   private String replyWriter;
-  private Date createDate;
+  private LocalDateTime createDate;
   private Long boardNum;
 }

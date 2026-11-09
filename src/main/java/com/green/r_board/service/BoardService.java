@@ -1,7 +1,9 @@
 package com.green.r_board.service;
 
 import com.green.r_board.dto.BoardDTO;
+import com.green.r_board.dto.ReplyDTO;
 import com.green.r_board.mapper.BoardMapper;
+import com.green.r_board.mapper.ReplyMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import java.util.List;
 @Service
 public class BoardService {
   private final BoardMapper boardMapper;
+  private final ReplyMapper replyMapper;
 
   //게시글 목록 조회 기능
   public List<BoardDTO> selectBoardList(){
@@ -36,5 +39,4 @@ public class BoardService {
   public void updateBoard(BoardDTO boardDTO){
     boardMapper.updateBoard(boardDTO);
   }
-
 }
