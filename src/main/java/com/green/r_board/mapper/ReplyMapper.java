@@ -9,4 +9,7 @@ import java.util.List;
 public interface ReplyMapper {
   //댓글 목록 조회
   List<ReplyDTO> replyList(Long boardNum);
+
+  //댓글 등록
+  void insertReply(ReplyDTO replyDTO);
 }

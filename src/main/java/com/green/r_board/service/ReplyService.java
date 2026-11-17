@@ -17,4 +17,9 @@ public class ReplyService {
     return replyMapper.replyList(boarNum);
   }
 
+  //댓글 등록 기능
+  public void insertReply(ReplyDTO replyDTO){
+    replyMapper.insertReply(replyDTO);
+  };
+
 }

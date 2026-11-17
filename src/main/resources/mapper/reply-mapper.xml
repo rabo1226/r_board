@@ -23,6 +23,18 @@
     ORDER BY CREATE_DATE DESC
   </select>
 
+  <insert id="insertReply">
+    INSERT INTO R_REPLY (
+      REPLY_CONTENT
+      , REPLY_WRITER
+      , BOARD_NUM
+    ) VALUES(
+      #{replyContent}
+      , 'admin@green.com'
+      , #{boardNum}
+    )
+  </insert>
+
 </mapper>
 
 
