@@ -8,7 +8,7 @@ public class MemberDTO {
   private String memEmail;
   private String memPw;
   private String memName;
-  private String memTEl;
   private String memTel;
+  private String memAddr;
   private String memRole;
 }
