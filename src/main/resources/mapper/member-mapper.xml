@@ -30,6 +30,16 @@
     )
   </insert>
 
+  <!--로그인 시도하는 회원의 정보를 조회-->
+  <select id="getMemberForLogin" resultMap="member">
+    SELECT
+      MEM_EMAIL
+      , MEM_PW
+      , MEM_ROLE
+    FROM R_MEMBER
+    WHERE MEM_EMAIL = #{memEmail}
+  </select>
+
 
 </mapper>
 

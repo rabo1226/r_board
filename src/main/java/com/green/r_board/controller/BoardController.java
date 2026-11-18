@@ -23,6 +23,7 @@ public class BoardController {
   //url : /boards
   @GetMapping("")
   public ResponseEntity<?> getBoardList(){
+    System.out.println("게시글 목록 조회 API 실행");
     //예외처리  -> 오류가 났을 때 멈추는 것이 아니라 다른 기능은 순서대로 진행되어야 바람직하다!
     //ex) try{p(1), p(2) 오류 발생, p(3)} -> p(2) 오류 발생하면 바로 catch(e){p(e)} 실행하고 리턴 no
     try {
@@ -55,6 +56,7 @@ public class BoardController {
    */
   @GetMapping("/{boardNum}")
   public ResponseEntity<?> getBoard(@PathVariable("boardNum") Long boardNum){
+    System.out.println("게시글 상세 정보 조회 API 실행");
     try {
       BoardDTO result = boardService.selectBoard(boardNum);
 

@@ -19,4 +19,9 @@ public class MemberService {
     memberDTO.setMemPw(encodedPw);  //회원가입 전 비밀번호 암호화 진행 후 setter호출로 암호화 완료!
     memberMapper.join(memberDTO);
   }
+
+  //로그인 시도하는 회원 정보 조회
+  public MemberDTO getMemberForLogin(String memEmail){
+    return memberMapper.getMemberForLogin(memEmail);
+  }
 }
