@@ -9,6 +9,9 @@ spring:
     url: jdbc:log4jdbc:mariadb://localhost:3306/study_db
     username: study_user
     password: mariadb
+  #SecretKey
+  jwt:
+    secret: f086326d61482fda16e8fa3d8433db01e1a13c336f12860293dac81ce325aa3317e6b5a6c1c116c1672891ed3ae5a6c3840af5efa7bf976c6420ca6e001a4963
 
 #쿼리문이 있는 mapper 파일 위치 지정, classpath는 resources 폴더를 의미함
 mybatis:

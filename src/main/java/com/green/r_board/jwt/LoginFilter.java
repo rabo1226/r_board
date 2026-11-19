@@ -7,24 +7,30 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Iterator;
 //UsernamePasswordAuthenticationFilter 로그인 담당하는 Spring Security 필터?
 
 //LoginFilter 클래스는 로그인 처리를 담당하는 클래스
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
   //AuthenticationManager 객체는 로그인 처리에 필요한 핵심 객체
   private final AuthenticationManager authenticationManager;
+  private final JwtUtil jwtUtil;
 
-  public LoginFilter(AuthenticationManager authenticationManager){
+  public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil){
     this.authenticationManager = authenticationManager;
+    this.jwtUtil = jwtUtil;
 
     // "/login"으로 지정되어 있는 로그인 요청 url변경
     setFilterProcessesUrl("/members/login");
@@ -35,6 +41,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     setPasswordParameter("memPw");
 
   }
+
 
   //로그인 요청이 들어오면 LoginFilter 클래스의 attemptAuthentication 메서드가 실행된다.
   // "/login"(Post 방식) url이 기본적인 로그인 요청 URL
@@ -86,9 +93,27 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
   //attemptAuthentication 메서드 실행결과 로그인 검증 성공하면 실행되는 메서드
   @Override
   protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-    System.out.println("successfulAuthentication 메서드 실행 - 로그인 검증 성공");
+    System.out.println("로그인 검증 성공! successfulAuthentication 메서드 호출!");
+    //authResult 에 로그인 정보가 들어있다! 이거를 뽑아서 사용하면 된다!!!
+    //토큰 생성을 위한 아이디 정보 추출
+    String username = authResult.getName();
 
     //검증 끝난 회원에게 JWT Token 발행
+    //-> 서버 : 어떠한 정보도 가지지 않음 / 클라이언트 : 증명서?같은걸 가지고있다!  => 클라이언트가 로그인 시도를 하면 내가 발급한 증명서 진위여부(발행시간과 만료기간 등을)를 확인하는 방식으로 진행한다! 단, 토큰이 털리면 소유자가 누군지는 모른다...
+
+    //토큰 생성을 위한 권한 정보 추출
+    Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
+    Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+    GrantedAuthority auth = iterator.next();
+    String role = auth.getAuthority();
+
+    //토큰 생성                                             1000 -> 1초 , *60 = 1분 * 30 = 30분
+    String accessToken = jwtUtil.createJwt(username, role, (1000 * 60 * 30)); //30분
+
+    //생성한 토큰을 응답 헤더에 담아 클라이언트에 전달
+    response.setHeader("Access-Control-Expose-Headers", "Authorization");
+    response.setHeader("Authorization", "Bearer " + accessToken);  //실제로 header에 accessToken을 가져간다!   -> Authorization : Bearer token값!  (Bearer은 jwt토큰이라는 의미표시!!!)
+    response.setStatus(HttpStatus.OK.value()); //클라이언트에 200 응답
   }
 
   //attemptAuthentication 메서드 실행결과 로그인 검증 실패하면 실행되는 메서드

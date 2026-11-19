@@ -1,6 +1,8 @@
 package com.green.r_board.config;
 
+import com.green.r_board.jwt.JwtUtil;
 import com.green.r_board.jwt.LoginFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,8 +24,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 //spring security의 인증(로그인)과 인가(권한) 관련 설정 파일
 @Configuration  //객체생성 + 설정 관련 파일임을 인지
 @EnableWebSecurity //Spring Security 설정파일임을 인지
+@RequiredArgsConstructor
 public class SecurityConfig {
-
+  private final JwtUtil jwtUtil;
   //인증 및 인가 설정 메소드, 형태 고정!
   @Bean  //프로젝트 run하면 return 데이터를 객체로 생성해주는 @어노테이션
   public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationConfiguration authConfig) throws Exception {
@@ -47,7 +50,7 @@ public class SecurityConfig {
 
     //로그인 기능을 담당하는 필터 UsernamePasswordAuthenticationFilter 클래스를
     //우리가 만든 LoginFilter 클래스로 대체
-    http.addFilterAt(new LoginFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterAt(new LoginFilter(authenticationManager, jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
